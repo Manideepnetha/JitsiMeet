@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Jitsi Meet Video Conference</title>
+  <title>Optimal Web : Contact Form With JS</title>
   <link rel="stylesheet" href="style.css">
-  <script src='https://meet.jit.si/external_api.js'></script>
-
+  <script src='https://meet.jit.si/external_api.js'></script> <!--Linking External JITSI API to this application-->
 </head>
 
 <body>
-  <!-- contact1 -->
+  <!-- Built UI for entering user details required for meeting-->
   <section class="w3l-simple-contact-form1">
     <div class="contact-form section-gap">
       <div class="wrapper">
@@ -21,7 +21,7 @@
       </div>
         <div class="contact-form" style="max-width: 450px; margin: 0 auto;">
           <div class="form-mid">
-            <form action="javascript:sendmail()" method="post">
+            <form action="javascript:sendmail()" method="post"> <!--Posting the entered details to sendmail function-->
               <div class="field">
                 <input type="text" class="form-control" name="Name" id="Name" placeholder="Name" required="">
               </div>
@@ -30,82 +30,99 @@
                   required="">
               </div>
               <div class="field">
-                <input type="text" class="form-control" name="Subject" id="Subject" placeholder="Subject"
+                <input type="tel" class="form-control" name="Subject" id="MobileNumber" placeholder="Mobile Number"
+                  required="">
+              </div>
+              <div class="field">
+                <input type="text" class="form-control" name="DName" id="DName" placeholder="Doctor Name"
+                  required="">
+              </div>
+              <div class="field">
+                <input type="email" class="form-control" name="DEmail" id="DEmail" placeholder="Doctor Email ID"
                   required="">
               </div>
               <textarea name="Message" class="form-control" id="Message" placeholder="Message"
                 required=""></textarea>
               <button type="submit" class="btn btn-contact">Send Message</button>
-              <!-- <input type="button" class="btn btn-contact" onclick="sendmail();"  value="Send Message"> -->
-
             </form>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <!-- /contact1 -->
-  
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+
+  <!-- Script written for sending mail to entered email address -->
 <script
-
-
   src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
   crossorigin="anonymous"></script>
+  <!-- Script written for using SMTP -->
 <script src="https://smtpjs.com/v3/smtp.js"></script>
- 
+ <!-- Script written for generating random meeting link -->
 <script>  
- var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var stringLength = 30;
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var stringLength = 30;
+  function pickRandom() {
+  return possible[Math.floor(Math.random() * possible.length)];
+  }
+  
+  // Storing entered values in UI
+  function sendmail(){
+    var randomString = Array.apply(null, Array(stringLength)).map(pickRandom).join(''); //Random string generation
+    console.log(randomString)
+    var URL = "https://meet.jit.si/"+randomString+"#jitsi_meet_external_api_id=0&appData.localStorageContent=null"
+  console.log(URL)
+    var name = $('#Name').val();
+    var email = $('#Sender').val();
+    var subject = $('#MobileNumber').val();
+    var dname = $('#DName').val();
+    var demail = $('#DEmail').val();
+    var message = $('#Message').val();
+    var body = $('#body').val();
+    var url = URL;
 
-    function pickRandom() {
-    return possible[Math.floor(Math.random() * possible.length)];
-    }
+    var Body='Name: '+name+'<br>Email: '+email+'<br>Mobile Number: '+subject+'<br>Doctor Name: '+dname+'<br>Doctor Email: '+demail+'<br>Message: '+message+'<br>URL: '+url;
+  //console.log(name, phone, email, message);
+// Sending emails with required meeting information
+  Email.send({
+    SecureToken:"fbf31702-bb7f-4a4e-9c1c-4ccf17ee777f",
+    To: email,
+    From: "manideepnetha24@gmail.com",
+    Subject: "New message on contact from "+name,
+    Body: Body
+  }).then(
+    message =>{
+      //console.log (message);
+      if(message=='OK'){
+      alert('Your mail has been send. Thank you for connecting.');
+      }
+      else{
+        console.error (message);
+        alert('There is error at sending message. ') 
+        }
+      }
+    );
 
-var randomString = Array.apply(null, Array(stringLength)).map(pickRandom).join('');
-console.log(randomString)
-var URL = "https://meet.jit.si/"+randomString+"#jitsi_meet_external_api_id=0&appData.localStorageContent=null"
-console.log(URL)
-
-
-
-     function sendmail(){
-    
-			var name = $('#Name').val();
-			var email = $('#Sender').val();
-			var subject = $('#Subject').val();
-      var message = $('#Message').val()
-
-			var body = $('#body').val();
-      var url = URL;
-
-			var Body='Name: '+name+'<br>Email: '+email+'<br>Subject: '+subject+'<br>Message: '+message+'<br>URL: '+url;
-			//console.log(name, phone, email, message);
-
-			Email.send({
-        SecureToken:"fbf31702-bb7f-4a4e-9c1c-4ccf17ee777f",
-				To: email,
-				From: "manideepnetha24@gmail.com",
-				Subject: "New message on contact from "+name,
-				Body: Body
-			}).then(
-				message =>{
-					//console.log (message);
-					if(message=='OK'){
-					alert('Your mail has been send. Thank you for connecting.');
-					}
-					else{
-						console.error (message);
-						alert('There is error at sending message. ')
-						
-					}
-
-				}
-			);
-		}
-    </script>
+    Email.send({
+    SecureToken:"fbf31702-bb7f-4a4e-9c1c-4ccf17ee777f",
+    To: demail,
+    From: "manideepnetha24@gmail.com",
+    Subject: "New message on contact from "+name,
+    Body: Body
+  }).then(
+    message =>{
+      //console.log (message);
+      if(message=='OK'){
+      alert('Your mail has been send. Thank you for connecting.');
+      }
+      else{
+        console.error (message);
+        alert('There is error at sending message. ') 
+        }
+      }
+    );
+  }
+  </script>
  </script>
-
 </body>
 </html>
